@@ -1956,10 +1956,10 @@ var QUIZ = [{"q": "Exercise Konkan-2026, for which INS Trishul reached Plymouth,
   });});
 
   /* ---------- quiz ---------- */
-  var topics = Array.from(new Set(QUIZ.map(function(q){return q.t}))).sort();
+  var topics = Array.from(new Set(QUIZ.map(function(q){return q.t||'General'}))).sort();
   var chips = document.getElementById('topicChips');
   var counts = {};
-  QUIZ.forEach(function(q){counts[q.t]=(counts[q.t]||0)+1});
+  QUIZ.forEach(function(q){var _t=q.t||'General';counts[_t]=(counts[_t]||0)+1});
   chips.innerHTML = '<button class="chip active" data-t="all">All ('+QUIZ.length+')</button>' +
     topics.map(function(t){return '<button class="chip" data-t="'+t+'">'+t+' ('+counts[t]+')</button>'}).join('');
   var view = QUIZ.map(function(q,i){return i});
@@ -1973,7 +1973,7 @@ var QUIZ = [{"q": "Exercise Konkan-2026, for which INS Trishul reached Plymouth,
     var s = curSearch.trim().toLowerCase();
     view = [];
     QUIZ.forEach(function(q,i){
-      if(curTopic!=='all' && q.t!==curTopic) return;
+      if(curTopic!=='all' && (q.t||'General')!==curTopic) return;
       if(s && (q.q+' '+q.e).toLowerCase().indexOf(s)===-1) return;
       view.push(i);
     });
@@ -2004,7 +2004,7 @@ var QUIZ = [{"q": "Exercise Konkan-2026, for which INS Trishul reached Plymouth,
     if(revealed[gi]){
       ex = '<div class="explain show"><strong>'+(answers[gi]===q.a?'Correct.':'Answer: '+String.fromCharCode(65+q.a)+'.')+'</strong> '+escHtml(q.e)+'</div>';
     }
-    qcard.innerHTML = '<div class="qmeta"><span class="qtag">'+escHtml(q.t)+'</span>'+flag+
+    qcard.innerHTML = '<div class="qmeta"><span class="qtag">'+escHtml(q.t||'General')+'</span>'+flag+
       '<span>Question '+(idx+1)+' of '+view.length+'</span></div>'+
       '<h3>'+escHtml(q.q)+'</h3><div class="answers">'+opts+'</div>'+ex+
       '<div class="controls"><button class="btn secondary" id="prevBtn" '+(idx===0?'disabled':'')+'>Previous</button>'+
